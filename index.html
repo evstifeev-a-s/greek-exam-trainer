@@ -28,7 +28,9 @@
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.startsWith('grtr:v1:') && k !== 'grtr:v1:last') data[k.slice(8)] = JSON.parse(localStorage.getItem(k));
+      if (!k || !k.startsWith('grtr:v1:') || k === 'grtr:v1:last') continue;
+      const st = JSON.parse(localStorage.getItem(k));
+      if (st && ['w', 'r', 'wr'].some(f => Object.keys(st[f] || {}).length)) data[k.slice(8)] = st; // пустые копии не переносим
     }
   } catch (e) { }
   let url = NEW;
